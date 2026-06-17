@@ -1,0 +1,515 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  .sq-quiz, .sq-quiz * { box-sizing: border-box; }
+  .sq-quiz {
+    --ink: #1C1B2E;
+    --ink-soft: #5C5773;
+    --ink-faint: #9D98AE;
+    --paper: #FBFAF7;
+    --paper-deep: #F1EEFB;
+    --line: #E6E1F2;
+    --violet-900: #2A2168;
+    --violet-700: #4B3FA0;
+    --violet-500: #7A6CE0;
+    --spark: #FF8A5B;
+    --spark-soft: #FFE7DA;
+    --green: #25D366;
+    --green-dark: #1AAD53;
+    font-family: 'Plus Jakarta Sans', var(--font-sans), -apple-system, sans-serif;
+    color: var(--ink);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 3rem;
+  }
+  .sq-quiz h2, .sq-quiz h3, .sq-quiz strong.sq-serif { font-family: 'Fraunces', Georgia, serif; }
+  .sq-quiz svg.icon { display: block; flex-shrink: 0; }
+
+  .sq-card {
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 2.25rem 1.85rem 2rem;
+    box-shadow: 0 1px 1px rgba(28,27,49,.03), 0 18px 40px -16px rgba(42,33,104,.18);
+    overflow: hidden;
+  }
+  .sq-pattern { position: absolute; top: -50px; right: -60px; width: 240px; height: 240px; z-index: 0; opacity: .07; color: var(--violet-700); pointer-events: none; display: block; }
+  .sq-content { position: relative; z-index: 1; }
+
+  /* header */
+  .sq-header { display: flex; justify-content: center; margin-bottom: 1.6rem; }
+  .sq-logo { display: flex; align-items: center; gap: 10px; }
+  .sq-logo-mark { width: 34px; height: 34px; flex-shrink: 0; display: block; }
+  .sq-logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+  .sq-logo-text strong { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--ink); }
+  .sq-logo-text small { font-size: 10px; font-weight: 600; letter-spacing: .12em; color: var(--violet-700); }
+
+  /* stepper — signal traveling along a neural path */
+  .sq-stepper { position: relative; height: 28px; margin-bottom: 1.9rem; }
+  .sq-stepper-track { position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: var(--line); border-radius: 2px; transform: translateY(-50%); }
+  .sq-stepper-fill { position: absolute; top: 50%; left: 0; height: 2px; background: linear-gradient(90deg, var(--violet-500), var(--violet-700)); border-radius: 2px; transform: translateY(-50%); transition: width .3s ease; }
+  .sq-stepper-node { position: absolute; top: 50%; width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 2px solid var(--line); transform: translate(-50%,-50%); transition: all .25s ease; }
+  .sq-stepper-node.done { background: var(--violet-700); border-color: var(--violet-700); }
+  .sq-stepper-node.active { width: 13px; height: 13px; background: var(--spark); border-color: var(--spark); box-shadow: 0 0 0 4px var(--spark-soft); }
+  .sq-stepper-pulse { position: absolute; top: 50%; width: 6px; height: 6px; margin-top: -3px; margin-left: -3px; border-radius: 50%; background: var(--spark); animation: sqPulse 1.6s ease-out infinite; }
+  @keyframes sqPulse { 0% { box-shadow: 0 0 0 0 rgba(255,138,91,.55); } 100% { box-shadow: 0 0 0 10px rgba(255,138,91,0); } }
+
+  /* step transitions */
+  .sq-step-enter { animation: sqStepIn .35s ease both; }
+  @keyframes sqStepIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .sq-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--violet-700); margin-bottom: .6rem; }
+  .sq-question { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--ink); margin-bottom: 1.4rem; line-height: 1.4; }
+
+  /* options */
+  .sq-options { display: flex; flex-direction: column; gap: 10px; }
+  .sq-option { display: flex; align-items: center; gap: 13px; width: 100%; padding: 13px 14px; border: 1.5px solid var(--line); border-radius: 16px; background: var(--paper); cursor: pointer; text-align: left; font-family: inherit; font-size: 14.5px; color: var(--ink); transition: border-color .15s, background .15s, transform .15s, box-shadow .15s; }
+  .sq-option:hover { border-color: var(--violet-500); background: var(--paper-deep); transform: translateY(-1px); box-shadow: 0 6px 14px -8px rgba(42,33,104,.25); }
+  .sq-option:focus-visible { outline: 2px solid var(--violet-500); outline-offset: 2px; }
+  .sq-option.is-selected { border-color: var(--violet-700); background: var(--paper-deep); }
+  .sq-option-icon { width: 38px; height: 38px; border-radius: 11px; background: var(--paper-deep); color: var(--violet-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: background .2s, color .2s; }
+  .sq-option.is-selected .sq-option-icon { background: linear-gradient(135deg, var(--violet-500), var(--violet-900)); color: #fff; }
+  .sq-option-icon.sq-dot { border-radius: 50%; }
+  .sq-option-icon .icon { width: 19px; height: 19px; }
+  .sq-option-label { flex: 1; line-height: 1.4; }
+  .sq-option-check { width: 21px; height: 21px; border-radius: 50%; border: 1.5px solid var(--line); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .sq-option.is-selected .sq-option-check { background: var(--violet-700); border-color: var(--violet-700); }
+  .sq-option-check .icon { width: 12px; height: 12px; color: #fff; }
+
+  /* fields */
+  .sq-fields { display: flex; flex-direction: column; gap: 14px; }
+  .sq-field label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+  .sq-input-wrap { position: relative; display: flex; align-items: center; }
+  .sq-input-icon { position: absolute; left: 14px; width: 17px; height: 17px; color: var(--ink-faint); pointer-events: none; }
+  .sq-input-wrap input { width: 100%; padding: 12px 14px 12px 40px; border: 1.5px solid var(--line); border-radius: 13px; font-size: 14.5px; font-family: inherit; background: var(--paper); color: var(--ink); }
+  .sq-input-wrap input::placeholder { color: var(--ink-faint); }
+  .sq-input-wrap input:focus { outline: none; border-color: var(--violet-500); box-shadow: 0 0 0 3px var(--paper-deep); }
+  .sq-field.sq-field-error .sq-input-wrap input { border-color: #E15B64; }
+  .sq-field-error-msg { font-size: 12.5px; color: #E15B64; margin: 0; min-height: 0; }
+
+  /* nav */
+  .sq-nav { display: flex; gap: 10px; margin-top: 1.9rem; }
+  .sq-btn-back { flex: 0 0 auto; width: 48px; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--line); border-radius: 13px; background: transparent; color: var(--ink-soft); cursor: pointer; transition: border-color .15s, color .15s; }
+  .sq-btn-back:hover { border-color: var(--violet-500); color: var(--violet-700); }
+  .sq-btn-back:focus-visible { outline: 2px solid var(--violet-500); outline-offset: 2px; }
+  .sq-btn-back .icon { width: 18px; height: 18px; }
+  .sq-btn-primary { flex: 1; padding: 14px 20px; border: none; border-radius: 13px; background: linear-gradient(135deg, var(--violet-700), var(--violet-900)); color: #fff; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 10px 24px -10px rgba(42,33,104,.55); transition: filter .15s, transform .15s; }
+  .sq-btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .sq-btn-primary:focus-visible { outline: 2px solid var(--violet-500); outline-offset: 2px; }
+  .sq-btn-primary:disabled { background: var(--paper-deep); color: var(--ink-faint); box-shadow: none; cursor: not-allowed; filter: none; transform: none; }
+
+  /* hero */
+  .sq-hero { text-align: center; padding: 0 0 .5rem; }
+  .sq-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--paper-deep); color: var(--violet-700); font-size: 11.5px; font-weight: 700; letter-spacing: .04em; padding: 6px 14px; border-radius: 99px; margin-bottom: 1.1rem; }
+  .sq-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--spark); }
+  .sq-hero h2 { font-size: 23px; font-weight: 600; color: var(--ink); line-height: 1.35; margin-bottom: .85rem; }
+  .sq-hero p { font-size: 14.5px; color: var(--ink-soft); line-height: 1.65; max-width: 440px; margin: 0 auto; }
+  .sq-divider { border: none; border-top: 1px solid var(--line); margin: 1.6rem 0; }
+  .sq-reassure { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.9rem; }
+  .sq-reassure-item { display: flex; align-items: center; gap: 11px; font-size: 13.5px; color: var(--ink-soft); }
+  .sq-reassure-icon { width: 30px; height: 30px; border-radius: 9px; background: var(--paper-deep); color: var(--violet-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sq-reassure-icon .icon { width: 16px; height: 16px; }
+  .sq-cta-pulse { animation: sqCtaPulse 2.6s ease-in-out infinite; }
+  @keyframes sqCtaPulse { 0%, 100% { box-shadow: 0 10px 24px -10px rgba(42,33,104,.55); } 50% { box-shadow: 0 10px 28px -8px rgba(255,138,91,.45); } }
+
+  /* result */
+  .sq-result-head { text-align: center; margin-bottom: 1.6rem; }
+  .sq-check-ring { position: relative; width: 60px; height: 60px; margin: 0 auto 1.1rem; }
+  .sq-check-ring::before { content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--spark-soft); animation: sqRipple .9s ease-out 1; }
+  .sq-check-circle { position: relative; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--violet-500), var(--violet-900)); display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 22px -8px rgba(42,33,104,.5); }
+  .sq-check-circle .icon { width: 26px; height: 26px; color: #fff; }
+  @keyframes sqRipple { from { transform: scale(1); opacity: .7; } to { transform: scale(1.8); opacity: 0; } }
+  .sq-result-head h3 { font-size: 21px; font-weight: 600; margin-bottom: 6px; }
+  .sq-result-head p { font-size: 14px; color: var(--ink-soft); line-height: 1.55; max-width: 400px; margin: 0 auto; }
+
+  .sq-summary { background: var(--paper-deep); border-radius: 18px; padding: 6px 16px; margin-bottom: 1.6rem; }
+  .sq-summary-row { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid rgba(74,63,160,.08); }
+  .sq-summary-row:last-child { border-bottom: none; }
+  .sq-summary-icon { width: 30px; height: 30px; border-radius: 9px; background: var(--paper); color: var(--violet-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .sq-summary-icon .icon { width: 15px; height: 15px; }
+  .sq-summary-text { display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+  .sq-summary-text span:first-child { font-size: 11.5px; color: var(--ink-faint); }
+  .sq-summary-text span:last-child { font-size: 13.5px; font-weight: 600; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .sq-whatsapp { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px 20px; background: var(--green); color: #fff; border: none; border-radius: 14px; font-size: 15.5px; font-weight: 600; cursor: pointer; text-decoration: none; box-shadow: 0 12px 26px -10px rgba(37,211,102,.55); transition: background .15s, transform .15s; }
+  .sq-whatsapp:hover { background: var(--green-dark); transform: translateY(-1px); }
+  .sq-whatsapp:focus-visible { outline: 2px solid var(--green-dark); outline-offset: 2px; }
+  .sq-trust-note { text-align: center; font-size: 12px; color: var(--ink-faint); margin-top: 12px; line-height: 1.5; }
+
+  @media (max-width: 480px) {
+    .sq-card { padding: 1.8rem 1.3rem 1.7rem; border-radius: 22px; }
+    .sq-hero h2 { font-size: 20px; }
+    .sq-question { font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sq-step-enter, .sq-stepper-pulse, .sq-cta-pulse, .sq-check-ring::before { animation: none !important; }
+  }
+</style>
+
+<div class="sq-quiz">
+  <div class="sq-card">
+    <svg class="sq-pattern" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="1.4">
+        <path d="M40 160 L80 100 L140 120 L170 50" />
+        <path d="M80 100 L60 40" />
+        <path d="M140 120 L160 170" />
+      </g>
+      <g fill="currentColor">
+        <circle cx="40" cy="160" r="4" /><circle cx="80" cy="100" r="5" /><circle cx="140" cy="120" r="4" />
+        <circle cx="170" cy="50" r="4" /><circle cx="60" cy="40" r="3.5" /><circle cx="160" cy="170" r="3.5" />
+      </g>
+    </svg>
+
+    <div class="sq-content">
+      <header class="sq-header">
+        <div class="sq-logo">
+          <svg class="sq-logo-mark" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="sqLogoGrad" x1="4" y1="4" x2="28" y2="28">
+                <stop offset="0" stop-color="#7A6CE0" />
+                <stop offset="1" stop-color="#2A2168" />
+              </linearGradient>
+            </defs>
+            <g stroke="url(#sqLogoGrad)" stroke-width="1.7" stroke-linecap="round">
+              <path d="M16 11V5" /><path d="M16 21v6" /><path d="M11 16H5" /><path d="M21 16h6" />
+              <path d="M12.6 12.6 8.2 8.2" /><path d="M19.4 19.4 23.8 23.8" />
+            </g>
+            <circle cx="16" cy="5" r="1.6" fill="url(#sqLogoGrad)" />
+            <circle cx="16" cy="27" r="1.6" fill="url(#sqLogoGrad)" />
+            <circle cx="5" cy="16" r="1.6" fill="url(#sqLogoGrad)" />
+            <circle cx="27" cy="16" r="1.6" fill="url(#sqLogoGrad)" />
+            <circle cx="8.2" cy="8.2" r="1.6" fill="url(#sqLogoGrad)" />
+            <circle cx="23.8" cy="23.8" r="1.6" fill="url(#sqLogoGrad)" />
+            <circle cx="16" cy="16" r="5.5" fill="url(#sqLogoGrad)" />
+          </svg>
+          <span class="sq-logo-text"><strong>Soma</strong><small>NEUROMODULAÇÃO</small></span>
+        </div>
+      </header>
+
+      <div class="sq-stepper" id="sq-stepper"></div>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  let current = 0;
+  let data = {
+    nome: '', cidade: '', telefone: '',
+    objetivo: '', servico: '', tempo: '', frequencia: '', limitacao: '', expectativa: ''
+  };
+
+  const ICON_PATHS = {
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+    lock: '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    chat: '<path d="M21 12c0 4.4-4 8-9 8-1.1 0-2.1-.2-3-.5L3 21l1.6-4.2A8.6 8.6 0 0 1 3 12c0-4.4 4-8 9-8s9 3.6 9 8Z"/>',
+    arrowLeft: '<path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/>',
+    check: '<path d="M5 13l4 4L19 7"/>',
+    brain: '<path d="M8 4a4 4 0 0 0-4 4c0 1 .3 1.8.8 2.5A4 4 0 0 0 6 18h1a3 3 0 0 0 3-3V7a3 3 0 0 0-2-2.8A4 4 0 0 0 8 4Z"/><path d="M16 4a4 4 0 0 1 4 4c0 1-.3 1.8-.8 2.5A4 4 0 0 1 18 18h-1a3 3 0 0 1-3-3V7a3 3 0 0 1 2-2.8A4 4 0 0 1 16 4Z"/>',
+    heart: '<path d="M12 21s-7-4.4-9.5-9C.5 8 2 4 6 4c2 0 3.5 1.2 4 2.3C10.5 5.2 12 4 14 4c4 0 5.5 4 3.5 8-2.5 4.6-9.5 9-9.5 9z"/><path d="M6 12h2l1.4-2.6L11 14l1.4-2.5.8.8H17"/>',
+    bolt: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/>',
+    bulb: '<path d="M12 3a6 6 0 0 0-3.6 10.8c.4.3.6.8.6 1.2v1h6v-1c0-.4.2-.9.6-1.2A6 6 0 0 0 12 3Z"/><path d="M9 18h6"/><path d="M10 21h4"/>',
+    dumbbell: '<path d="M4 9v6"/><path d="M7 6.5v11"/><path d="M17 6.5v11"/><path d="M20 9v6"/><path d="M7 12h10"/>',
+    compass: '<circle cx="12" cy="12" r="9"/><path d="M14.5 9.5 13 13l-3.5 1.5L11 11l3.5-1.5Z"/>',
+    target: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+    calendar: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 3v4"/><path d="M16 3v4"/>',
+    helpCircle: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7v.4"/><path d="M12 17h.01"/>',
+    checkCircle: '<circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.5 2.5L16 9"/>',
+    pauseCircle: '<circle cx="12" cy="12" r="9"/><path d="M10 9v6"/><path d="M14 9v6"/>',
+    sprout: '<path d="M12 21v-9"/><path d="M12 12C12 8 8.5 7 5.5 7c0 4 1.8 6 6.5 6"/><path d="M12 12c0-3 2.8-4.5 5.5-4.5 0 3.2-1.6 5.3-5.5 5.3"/>',
+    user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/>',
+    mapPin: '<path d="M12 21s7-7.5 7-12a7 7 0 1 0-14 0c0 4.5 7 12 7 12Z"/><circle cx="12" cy="9" r="2.5"/>',
+    phone: '<path d="M5 4h3l2 5-2 1a12 12 0 0 0 6 6l1-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/>'
+  };
+
+  function icon(name, cls) {
+    return '<svg class="icon ' + (cls || '') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (ICON_PATHS[name] || '') + '</svg>';
+  }
+
+  const steps = [
+    { type: 'intro' },
+    { type: 'fields' },
+    {
+      type: 'choice', key: 'objetivo',
+      question: 'Qual é o principal objetivo com o tratamento?',
+      options: [
+        { label: 'Reabilitação — recuperar funções motoras, fala ou equilíbrio', icon: 'brain', value: 'reabilitacao' },
+        { label: 'Saúde mental — depressão, ansiedade ou insônia', icon: 'heart', value: 'saude_mental' },
+        { label: 'Dor crônica — reduzir ou controlar a dor', icon: 'bolt', value: 'dor_cronica' },
+        { label: 'Ainda não tenho certeza, quero entender as opções', icon: 'bulb', value: 'nao_sei' }
+      ]
+    },
+    {
+      type: 'choice_condicional', key: 'servico',
+      question: 'Qual área de reabilitação você está buscando?',
+      showIf: (d) => d.objetivo === 'reabilitacao',
+      options: [
+        { label: 'Motora — força, equilíbrio, capacidade de caminhar', icon: 'dumbbell', value: 'motora' },
+        { label: 'Linguagem / fala — comunicação e processamento cognitivo', icon: 'chat', value: 'linguagem' },
+        { label: 'Vestibular — tontura, vertigem, coordenação', icon: 'compass', value: 'vestibular' },
+        { label: 'Cognitiva — memória, atenção, planejamento', icon: 'target', value: 'cognitiva' }
+      ]
+    },
+    {
+      type: 'choice', key: 'tempo',
+      question: 'Há quanto tempo você convive com essa condição?',
+      options: [
+        { label: 'Menos de 6 meses', icon: 'calendar', value: 'menos_6m' },
+        { label: 'Entre 6 meses e 2 anos', icon: 'calendar', value: '6m_2a' },
+        { label: 'Mais de 2 anos', icon: 'calendar', value: 'mais_2a' },
+        { label: 'Não sei precisar', icon: 'helpCircle', value: 'nao_sei' }
+      ]
+    },
+    {
+      type: 'choice', key: 'frequencia',
+      question: 'Você já realizou algum tratamento anteriormente?',
+      options: [
+        { label: 'Sim, estou em tratamento atualmente', icon: 'checkCircle', value: 'em_tratamento' },
+        { label: 'Já fiz, mas interrompi', icon: 'pauseCircle', value: 'interrompido' },
+        { label: 'Nunca fiz nenhum tratamento', icon: 'sprout', value: 'nunca' }
+      ]
+    },
+    {
+      type: 'choice', key: 'limitacao',
+      question: 'O quanto essa condição impacta sua rotina hoje?',
+      options: [
+        { label: 'Bastante — dificulta atividades básicas do dia a dia', dot: '#E15B64', value: 'bastante' },
+        { label: 'Moderadamente — com esforço ainda consigo fazer quase tudo', dot: '#E8A33D', value: 'moderado' },
+        { label: 'Pouco — busco melhorar, mas ainda funciono bem', dot: '#3FAE6A', value: 'pouco' }
+      ]
+    },
+    { type: 'result' }
+  ];
+
+  function getVisibleSteps() {
+    return steps.filter(s => s.type === 'choice_condicional' ? s.showIf(data) : true);
+  }
+
+  function renderStepper(idx, total) {
+    const denom = Math.max(total - 1, 1);
+    const pct = (idx / denom) * 100;
+    let nodes = '';
+    for (let i = 0; i < total; i++) {
+      const left = (i / denom) * 100;
+      const state = i < idx ? 'done' : (i === idx ? 'active' : '');
+      nodes += '<div class="sq-stepper-node ' + state + '" style="left:' + left + '%"></div>';
+    }
+    return '<div class="sq-stepper-track"></div>' +
+      '<div class="sq-stepper-fill" style="width:' + pct + '%"></div>' +
+      nodes +
+      '<div class="sq-stepper-pulse" style="left:' + pct + '%"></div>';
+  }
+
+  function renderOptions(step) {
+    return step.options.map(o => {
+      const selected = data[step.key] === o.value;
+      const badge = o.dot
+        ? `<span class="sq-option-icon sq-dot" style="background:${o.dot}"></span>`
+        : `<span class="sq-option-icon">${icon(o.icon)}</span>`;
+      return `<button type="button" class="sq-option ${selected ? 'is-selected' : ''}" onclick="window.__sqSelect('${step.key}','${o.value}',this)">
+        ${badge}
+        <span class="sq-option-label">${o.label}</span>
+        <span class="sq-option-check">${selected ? icon('check') : ''}</span>
+      </button>`;
+    }).join('');
+  }
+
+  function renderStep(idx) {
+    const visible = getVisibleSteps();
+    const step = visible[idx];
+    document.getElementById('sq-stepper').innerHTML = renderStepper(idx, visible.length);
+    const container = document.getElementById('quiz-container');
+
+    if (step.type === 'intro') {
+      container.innerHTML = `
+        <div class="sq-step-enter">
+          <div class="sq-hero">
+            <span class="sq-badge"><span class="sq-badge-dot"></span>Avaliação gratuita</span>
+            <h2>Descubra como a Neuromodulação pode transformar sua qualidade de vida</h2>
+            <p>Responda algumas perguntas rápidas para que nossa equipe entenda exatamente o que você precisa e indique as melhores opções para você.</p>
+          </div>
+          <hr class="sq-divider">
+          <div class="sq-reassure">
+            <div class="sq-reassure-item"><span class="sq-reassure-icon">${icon('clock')}</span>Leva menos de 2 minutos</div>
+            <div class="sq-reassure-item"><span class="sq-reassure-icon">${icon('lock')}</span>Seus dados são confidenciais</div>
+            <div class="sq-reassure-item"><span class="sq-reassure-icon">${icon('chat')}</span>Nossa equipe entra em contato pelo WhatsApp</div>
+          </div>
+          <button class="sq-btn-primary sq-cta-pulse" style="width:100%" onclick="window.__sqNext()">Começar agora</button>
+        </div>
+      `;
+      return;
+    }
+
+    if (step.type === 'fields') {
+      container.innerHTML = `
+        <div class="sq-step-enter">
+          <div class="sq-eyebrow">Seus dados</div>
+          <p class="sq-question">Antes de tudo, como podemos te chamar e entrar em contato?</p>
+          <div class="sq-fields">
+            <div class="sq-field" id="w-nome">
+              <label>Nome completo</label>
+              <div class="sq-input-wrap">${icon('user', 'sq-input-icon')}<input type="text" id="f-nome" placeholder="Seu nome" value="${data.nome}" /></div>
+            </div>
+            <div class="sq-field" id="w-cidade">
+              <label>Cidade</label>
+              <div class="sq-input-wrap">${icon('mapPin', 'sq-input-icon')}<input type="text" id="f-cidade" placeholder="Sua cidade" value="${data.cidade}" /></div>
+            </div>
+            <div class="sq-field" id="w-tel">
+              <label>WhatsApp (com DDD)</label>
+              <div class="sq-input-wrap">${icon('phone', 'sq-input-icon')}<input type="tel" id="f-tel" placeholder="(51) 99999-9999" value="${data.telefone}" /></div>
+            </div>
+            <p class="sq-field-error-msg" id="field-error"></p>
+          </div>
+          <div class="sq-nav">
+            <button class="sq-btn-back" onclick="window.__sqPrev()" aria-label="Voltar">${icon('arrowLeft')}</button>
+            <button class="sq-btn-primary" onclick="window.__sqSaveFields()">Continuar</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (step.type === 'choice' || step.type === 'choice_condicional') {
+      const visibleQuestions = visible.filter(s => s.type === 'choice' || s.type === 'choice_condicional');
+      const qNum = visibleQuestions.indexOf(step) + 1;
+      container.innerHTML = `
+        <div class="sq-step-enter">
+          <div class="sq-eyebrow">Pergunta ${qNum} de ${visibleQuestions.length}</div>
+          <p class="sq-question">${step.question}</p>
+          <div class="sq-options">${renderOptions(step)}</div>
+          <div class="sq-nav">
+            <button class="sq-btn-back" onclick="window.__sqPrev()" aria-label="Voltar">${icon('arrowLeft')}</button>
+            <button class="sq-btn-primary" id="sq-btn-next-choice" onclick="window.__sqNext()" ${data[step.key] ? '' : 'disabled'}>Continuar</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    if (step.type === 'result') {
+      const servicoLabel = {
+        reabilitacao: 'Reabilitação',
+        saude_mental: 'Saúde Mental',
+        dor_cronica: 'Dor Crônica',
+        nao_sei: 'A definir com especialista'
+      }[data.objetivo] || data.objetivo;
+
+      const subLabel = {
+        motora: 'Reabilitação Motora',
+        linguagem: 'Reabilitação da Linguagem',
+        vestibular: 'Reabilitação Vestibular',
+        cognitiva: 'Reabilitação Cognitiva'
+      }[data.servico] || '';
+
+      const tempoLabel = {
+        menos_6m: 'Menos de 6 meses',
+        '6m_2a': 'Entre 6 meses e 2 anos',
+        mais_2a: 'Mais de 2 anos',
+        nao_sei: 'Não sabe precisar'
+      }[data.tempo] || '';
+
+      const freqLabel = {
+        em_tratamento: 'Em tratamento atualmente',
+        interrompido: 'Já fez, interrompeu',
+        nunca: 'Nunca fez tratamento'
+      }[data.frequencia] || '';
+
+      const impactoLabel = {
+        bastante: 'Alto impacto na rotina',
+        moderado: 'Impacto moderado',
+        pouco: 'Baixo impacto'
+      }[data.limitacao] || '';
+
+      const msg = buildWAMessage(servicoLabel, subLabel, tempoLabel, freqLabel, impactoLabel);
+      const firstName = data.nome.split(' ')[0];
+
+      const rows = [
+        { label: 'Nome', value: data.nome, icon: 'user' },
+        { label: 'Cidade', value: data.cidade, icon: 'mapPin' },
+        { label: 'Área de interesse', value: subLabel || servicoLabel, icon: 'brain' },
+        { label: 'Tempo de condição', value: tempoLabel, icon: 'calendar' },
+        { label: 'Tratamentos anteriores', value: freqLabel, icon: 'checkCircle' },
+        { label: 'Impacto na rotina', value: impactoLabel, icon: 'bolt' }
+      ].map(r => `
+        <div class="sq-summary-row">
+          <span class="sq-summary-icon">${icon(r.icon)}</span>
+          <span class="sq-summary-text"><span>${r.label}</span><span>${r.value}</span></span>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="sq-step-enter">
+          <div class="sq-result-head">
+            <div class="sq-check-ring"><div class="sq-check-circle">${icon('check')}</div></div>
+            <h3>Tudo certo, ${firstName}!</h3>
+            <p>Nossa equipe vai analisar seu perfil e entrar em contato com a melhor indicação para você.</p>
+          </div>
+          <div class="sq-summary">${rows}</div>
+          <a class="sq-whatsapp" href="${msg}" target="_blank" rel="noopener">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.557 4.126 1.532 5.856L.057 23.882l6.19-1.621A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.723.976.993-3.625-.234-.373A9.818 9.818 0 012.182 12C2.182 6.575 6.575 2.182 12 2.182S21.818 6.575 21.818 12 17.425 21.818 12 21.818z"/></svg>
+            Enviar para o WhatsApp da Soma
+          </a>
+          <p class="sq-trust-note">Ao clicar, você será redirecionado para o WhatsApp com as informações preenchidas automaticamente.</p>
+        </div>
+      `;
+      return;
+    }
+  }
+
+  function buildWAMessage(servicoLabel, subLabel, tempoLabel, freqLabel, impactoLabel) {
+    const phone = '5551999999999';
+    const area = subLabel || servicoLabel;
+    const text = 'Olá! Preenchi o quiz da Soma Neuromodulação e gostaria de saber mais.\n\n' +
+      '*📋 Resumo do meu perfil:*\n' +
+      '• Nome: ' + data.nome + '\n' +
+      '• Cidade: ' + data.cidade + '\n' +
+      '• WhatsApp: ' + data.telefone + '\n' +
+      '• Área de interesse: ' + area + '\n' +
+      '• Há quanto tempo: ' + tempoLabel + '\n' +
+      '• Tratamentos anteriores: ' + freqLabel + '\n' +
+      '• Impacto na rotina: ' + impactoLabel + '\n\n' +
+      'Aguardo o contato da equipe!';
+    return 'https://wa.me/' + phone + '?text=' + encodeURIComponent(text);
+  }
+
+  window.__sqSelect = function (key, value, btn) {
+    data[key] = value;
+    document.querySelectorAll('.sq-option').forEach(b => {
+      b.classList.remove('is-selected');
+      const chk = b.querySelector('.sq-option-check');
+      if (chk) chk.innerHTML = '';
+    });
+    btn.classList.add('is-selected');
+    btn.querySelector('.sq-option-check').innerHTML = icon('check');
+    const nextBtn = document.getElementById('sq-btn-next-choice');
+    if (nextBtn) nextBtn.disabled = false;
+  };
+
+  window.__sqSaveFields = function () {
+    const nome = document.getElementById('f-nome').value.trim();
+    const cidade = document.getElementById('f-cidade').value.trim();
+    const tel = document.getElementById('f-tel').value.trim();
+    const missing = { nome: !nome, cidade: !cidade, tel: !tel };
+    ['nome', 'cidade', 'tel'].forEach(k => {
+      document.getElementById('w-' + k).classList.toggle('sq-field-error', missing[k]);
+    });
+    const errBox = document.getElementById('field-error');
+    if (missing.nome || missing.cidade || missing.tel) {
+      errBox.textContent = 'Preencha todos os campos para continuar.';
+      return;
+    }
+    errBox.textContent = '';
+    data.nome = nome; data.cidade = cidade; data.telefone = tel;
+    current++;
+    renderStep(current);
+  };
+
+  window.__sqNext = function () { current++; renderStep(current); };
+  window.__sqPrev = function () { if (current > 0) { current--; renderStep(current); } };
+
+  renderStep(0);
+})();
+</script>
