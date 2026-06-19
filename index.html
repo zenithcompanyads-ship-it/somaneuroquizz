@@ -1,324 +1,910 @@
-
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Soma Neuromodulação — Descubra como podemos te ajudar</title>
+<meta name="description" content="Responda perguntas rápidas e fale com nossa equipe pelo WhatsApp sobre o tratamento ideal para você.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.47.0/iconfont/tabler-icons.min.css">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); }
-  .quiz-wrap { max-width: 640px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
-  .logo-area { text-align: center; margin-bottom: 2rem; }
-  .logo-area h1 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
-  .logo-area p { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
-  .progress-bar-wrap { background: var(--color-background-secondary); border-radius: 99px; height: 6px; margin-bottom: 2rem; overflow: hidden; }
-  .progress-bar { height: 100%; background: #7F77DD; border-radius: 99px; transition: width 0.4s ease; }
-  .step-label { font-size: 12px; color: var(--color-text-tertiary); margin-bottom: 0.5rem; letter-spacing: 0.04em; text-transform: uppercase; }
-  .question { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 1.5rem; line-height: 1.4; }
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); background: var(--color-background-primary); cursor: pointer; font-size: 15px; color: var(--color-text-primary); text-align: left; transition: border-color 0.15s, background 0.15s; }
-  .option-btn:hover { border-color: #7F77DD; background: #EEEDFE; color: #3C3489; }
-  .option-btn.selected { border-color: #7F77DD; background: #EEEDFE; color: #3C3489; border-width: 1.5px; }
-  .option-icon { width: 36px; height: 36px; border-radius: 8px; background: #EEEDFE; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 18px; }
-  .field-wrap { display: flex; flex-direction: column; gap: 14px; }
-  .field-wrap label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 4px; display: block; }
-  .field-wrap input { width: 100%; padding: 12px 14px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); font-size: 15px; background: var(--color-background-primary); color: var(--color-text-primary); }
-  .field-wrap input:focus { outline: none; border-color: #7F77DD; box-shadow: 0 0 0 2px #EEEDFE; }
-  .nav { display: flex; gap: 10px; margin-top: 2rem; }
-  .btn-back { flex: 0 0 auto; padding: 12px 20px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: transparent; color: var(--color-text-secondary); cursor: pointer; font-size: 15px; }
-  .btn-next { flex: 1; padding: 13px 20px; border: none; border-radius: var(--border-radius-md); background: #534AB7; color: #fff; cursor: pointer; font-size: 15px; font-weight: 500; transition: background 0.15s; }
-  .btn-next:hover { background: #3C3489; }
-  .btn-next:disabled { background: var(--color-background-secondary); color: var(--color-text-tertiary); cursor: not-allowed; }
-  .hero { text-align: center; padding: 1rem 0 1.5rem; }
-  .hero-badge { display: inline-block; background: #EEEDFE; color: #534AB7; font-size: 12px; padding: 4px 14px; border-radius: 99px; margin-bottom: 1rem; }
-  .hero h2 { font-size: 22px; font-weight: 500; color: var(--color-text-primary); line-height: 1.35; margin-bottom: 0.75rem; }
-  .hero p { font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
-  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.5rem 0; }
-  .finish-card { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1.5rem; text-align: center; }
-  .finish-card h3 { font-size: 18px; font-weight: 500; margin-bottom: 0.5rem; }
-  .finish-card p { font-size: 14px; color: var(--color-text-secondary); margin-bottom: 1.25rem; line-height: 1.5; }
-  .whatsapp-btn { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; padding: 15px 20px; background: #25D366; color: #fff; border: none; border-radius: var(--border-radius-md); font-size: 16px; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.15s; }
-  .whatsapp-btn:hover { background: #1aad53; }
-  .tag { display: inline-block; background: #EEEDFE; color: #534AB7; font-size: 12px; padding: 3px 10px; border-radius: 99px; margin: 2px; }
-  .summary-box { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.5rem; text-align: left; }
-  .summary-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
-  .summary-row span:first-child { color: var(--color-text-secondary); }
-  .summary-row span:last-child { font-weight: 500; color: var(--color-text-primary); }
-</style>
+  :root {
+    --color-bg: #FAF9F7;
+    --color-card-bg: #FFFFFF;
+    --color-text-primary: #1F1D2B;
+    --color-text-secondary: #6B6878;
+    --color-text-tertiary: #9C99A5;
+    --color-border: #E8E5E0;
+    --color-border-strong: #D8D4CC;
+    --purple-50: #EEEDFE;
+    --purple-100: #CECBF6;
+    --purple-400: #7F77DD;
+    --purple-600: #534AB7;
+    --purple-800: #3C3489;
+    --purple-900: #26215C;
+    --whatsapp: #25D366;
+    --whatsapp-dark: #1aad53;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-xl: 22px;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
 
-<div class="quiz-wrap">
-  <div class="logo-area">
-    <div style="display:inline-flex;align-items:center;gap:8px;margin-bottom:6px;">
-      <div style="width:32px;height:32px;background:#534AB7;border-radius:8px;display:flex;align-items:center;justify-content:center;">
-        <i class="ti ti-brain" style="color:#fff;font-size:18px;" aria-hidden="true"></i>
-      </div>
-      <span style="font-size:18px;font-weight:500;color:var(--color-text-primary);">Soma Neuromodulação</span>
-    </div>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 480px;
+    min-height: 100vh;
+    background: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    padding: 0.85rem 1.1rem 1.25rem;
+  }
+
+  /* Header */
+  .logo-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.85rem;
+  }
+  .logo-icon {
+    width: 26px;
+    height: 26px;
+    background: var(--purple-600);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .logo-icon i { color: #fff; font-size: 14px; }
+  .logo-row span {
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    background: var(--color-border);
+    border-radius: 99px;
+    height: 5px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--purple-400);
+    border-radius: 99px;
+    width: 0%;
+    transition: width 0.45s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* Card wrapper for each step */
+  .quiz-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-label {
+    font-size: 11.5px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-weight: 600;
+    animation: fadeIn 0.4s ease;
+  }
+
+  .question {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.9rem;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    animation: fadeIn 0.4s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Options */
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    animation: fadeIn 0.45s ease;
+  }
+
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 11px 12px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-card-bg);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-align: left;
+    line-height: 1.3;
+    min-height: 44px;
+    width: 100%;
+    transition: border-color 0.15s, background 0.15s, transform 0.1s, box-shadow 0.15s;
+  }
+  .option-btn:active { transform: scale(0.98); }
+  .option-btn.selected {
+    border-color: var(--purple-600);
+    background: var(--purple-50);
+    color: var(--purple-800);
+    box-shadow: 0 0 0 1px var(--purple-600);
+  }
+  .option-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--purple-50);
+    color: var(--purple-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 15px;
+  }
+  .option-btn.selected .option-icon {
+    background: var(--purple-600);
+    color: #fff;
+  }
+  .option-label {
+    flex: 1;
+    min-width: 0;
+  }
+  .option-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--color-border-strong);
+    background: var(--color-card-bg);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .option-btn.selected .option-radio {
+    border-color: var(--purple-600);
+    background: var(--purple-600);
+  }
+  .option-radio i {
+    font-size: 12px;
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .option-btn.selected .option-radio i {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Form fields */
+  .field-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    animation: fadeIn 0.45s ease;
+  }
+  .field-wrap label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .field-wrap input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-family: var(--font-sans);
+    background: var(--color-card-bg);
+    color: var(--color-text-primary);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .field-wrap input::placeholder { color: var(--color-text-tertiary); }
+  .field-wrap input:focus {
+    outline: none;
+    border-color: var(--purple-400);
+    box-shadow: 0 0 0 3px var(--purple-50);
+  }
+
+  .phone-input-wrap {
+    display: flex;
+    align-items: stretch;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-card-bg);
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .phone-input-wrap:focus-within {
+    border-color: var(--purple-400);
+    box-shadow: 0 0 0 3px var(--purple-50);
+  }
+  .phone-flag-prefix {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 10px;
+    border-right: 1.5px solid var(--color-border);
+    background: var(--color-bg);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .phone-flag-prefix .flag-emoji {
+    font-size: 17px;
+    line-height: 1;
+  }
+  .phone-input-wrap input {
+    border: none;
+    border-radius: 0;
+    flex: 1;
+    min-width: 0;
+  }
+  .phone-input-wrap input:focus {
+    box-shadow: none;
+  }
+  .city-hint {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--purple-600);
+    margin-top: 6px;
+    min-height: 16px;
+    opacity: 0;
+    transform: translateY(-2px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .city-hint.show { opacity: 1; transform: translateY(0); }
+  .city-hint i { font-size: 13px; }
+  .field-error {
+    border-color: #D85A30 !important;
+  }
+  .error-msg {
+    font-size: 12px;
+    color: #D85A30;
+    margin-top: -8px;
+    display: none;
+  }
+  .error-msg.show { display: block; }
+
+  /* Nav buttons */
+  .nav {
+    display: flex;
+    gap: 9px;
+    margin-top: 1.1rem;
+  }
+  .btn-back {
+    flex: 0 0 44px;
+    height: 44px;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+  }
+  .btn-back:active { background: var(--color-border); }
+  .btn-next {
+    flex: 1;
+    padding: 12px 18px;
+    border: none;
+    border-radius: var(--radius-md);
+    background: var(--purple-600);
+    color: #fff;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    min-height: 44px;
+    cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .btn-next:active { background: var(--purple-800); }
+  .btn-next:disabled {
+    background: var(--color-border);
+    color: var(--color-text-tertiary);
+    cursor: not-allowed;
+  }
+
+  /* Intro hero */
+  .hero {
+    text-align: center;
+    padding: 0.25rem 0 0.9rem;
+    animation: fadeIn 0.5s ease;
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--purple-50);
+    color: var(--purple-600);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 13px;
+    border-radius: 99px;
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.02em;
+  }
+  .hero h1 {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.28;
+    margin-bottom: 0.55rem;
+    letter-spacing: -0.015em;
+  }
+  .hero p {
+    font-size: 13.5px;
+    color: var(--color-text-secondary);
+    line-height: 1.55;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 0.9rem 0;
+  }
+
+  .perks {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1.1rem;
+  }
+  .perk-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+  }
+  .perk-row i { color: var(--purple-600); font-size: 18px; flex-shrink: 0; }
+
+  /* Result screen */
+  .result-icon-wrap {
+    text-align: center;
+    margin-bottom: 1rem;
+    animation: popIn 0.5s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.7); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  .result-icon {
+    width: 46px;
+    height: 46px;
+    background: var(--purple-50);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.6rem;
+  }
+  .result-icon i { color: var(--purple-600); font-size: 23px; }
+  .result-icon-wrap h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 5px;
+  }
+  .result-icon-wrap p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .summary-box {
+    background: var(--color-card-bg);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 0.7rem 1rem;
+    margin-bottom: 1rem;
+    animation: fadeIn 0.5s ease;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 12.5px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .summary-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .summary-row:first-child { padding-top: 0; }
+  .summary-row span:first-child { color: var(--color-text-secondary); flex-shrink: 0; }
+  .summary-row span:last-child {
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-align: right;
+  }
+
+  .whatsapp-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 13px 18px;
+    background: var(--whatsapp);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    min-height: 48px;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .whatsapp-btn:active { background: var(--whatsapp-dark); transform: scale(0.98); }
+  .whatsapp-btn i { font-size: 19px; }
+
+  .footnote {
+    text-align: center;
+    font-size: 11px;
+    color: var(--color-text-tertiary);
+    margin-top: 9px;
+    line-height: 1.4;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+  }
+
+  @media (min-width: 481px) {
+    .page {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+      min-height: auto;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <h1 class="sr-only">Quiz de qualificação — Soma Neuromodulação</h1>
+
+  <div class="logo-row">
+    <div class="logo-icon"><i class="ti ti-brain"></i></div>
+    <span>Soma Neuromodulação</span>
   </div>
 
   <div class="progress-bar-wrap">
-    <div class="progress-bar" id="progress" style="width:0%"></div>
+    <div class="progress-bar" id="progress"></div>
   </div>
 
-  <div id="quiz-container"></div>
+  <div class="quiz-card" id="quiz-container"></div>
 </div>
 
 <script>
-const TOTAL_STEPS = 8;
-let current = 0;
-let data = {
-  nome: '', cidade: '', telefone: '',
-  objetivo: '', servico: '', tempo: '', frequencia: '', limitacao: '', expectativa: ''
-};
+(function () {
+  // ====== CONFIGURAÇÃO ======
+  // Troque pelo número de WhatsApp comercial real (código do país + DDD + número, somente dígitos)
+  var WHATSAPP_NUMBER = '5551999999999';
+  // ===========================
 
-const steps = [
-  { type: 'intro' },
-  { type: 'fields' },
-  {
-    type: 'choice', key: 'objetivo',
-    question: 'Qual é o principal objetivo com o tratamento?',
-    options: [
-      { label: 'Reabilitação — recuperar funções motoras, fala ou equilíbrio', icon: '🧠', value: 'reabilitacao' },
-      { label: 'Saúde mental — depressão, ansiedade ou insônia', icon: '💜', value: 'saude_mental' },
-      { label: 'Dor crônica — reduzir ou controlar a dor', icon: '⚡', value: 'dor_cronica' },
-      { label: 'Ainda não tenho certeza, quero entender as opções', icon: '💡', value: 'nao_sei' },
-    ]
-  },
-  {
-    type: 'choice_condicional', key: 'servico',
-    question: 'Qual área de reabilitação você está buscando?',
-    showIf: (d) => d.objetivo === 'reabilitacao',
-    options: [
-      { label: 'Motora — força, equilíbrio, capacidade de caminhar', icon: '🦾', value: 'motora' },
-      { label: 'Linguagem / fala — comunicação e processamento cognitivo', icon: '🗣️', value: 'linguagem' },
-      { label: 'Vestibular — tontura, vertigem, coordenação', icon: '🌀', value: 'vestibular' },
-      { label: 'Cognitiva — memória, atenção, planejamento', icon: '🔍', value: 'cognitiva' },
-    ]
-  },
-  {
-    type: 'choice', key: 'tempo',
-    question: 'Há quanto tempo você convive com essa condição?',
-    options: [
-      { label: 'Menos de 6 meses', icon: '📅', value: 'menos_6m' },
-      { label: 'Entre 6 meses e 2 anos', icon: '🗓️', value: '6m_2a' },
-      { label: 'Mais de 2 anos', icon: '📆', value: 'mais_2a' },
-      { label: 'Não sei precisar', icon: '❓', value: 'nao_sei' },
-    ]
-  },
-  {
-    type: 'choice', key: 'frequencia',
-    question: 'Você já realizou algum tratamento anteriormente?',
-    options: [
-      { label: 'Sim, estou em tratamento atualmente', icon: '✅', value: 'em_tratamento' },
-      { label: 'Já fiz, mas interrompi', icon: '⏸️', value: 'interrompido' },
-      { label: 'Nunca fiz nenhum tratamento', icon: '🔰', value: 'nunca' },
-    ]
-  },
-  {
-    type: 'choice', key: 'limitacao',
-    question: 'O quanto essa condição impacta sua rotina hoje?',
-    options: [
-      { label: 'Bastante — dificulta atividades básicas do dia a dia', icon: '🔴', value: 'bastante' },
-      { label: 'Moderadamente — com esforço ainda consigo fazer quase tudo', icon: '🟡', value: 'moderado' },
-      { label: 'Pouco — busco melhorar, mas ainda funciono bem', icon: '🟢', value: 'pouco' },
-    ]
-  },
-  { type: 'result' }
-];
+  var current = 0;
+  var data = {
+    nome: '', cidade: '', telefone: '',
+    objetivo: '', servico: '', tempo: '', frequencia: '', limitacao: ''
+  };
+  var cidadeAutoPreenchida = false;
 
-function getProgress(step) {
-  if (step === 0) return 0;
-  if (step >= TOTAL_STEPS - 1) return 100;
-  return Math.round((step / (TOTAL_STEPS - 2)) * 100);
-}
+  var DDD_CIDADE = {
+    '11': 'São Paulo, SP', '12': 'São José dos Campos, SP', '13': 'Santos, SP',
+    '14': 'Bauru, SP', '15': 'Sorocaba, SP', '16': 'Ribeirão Preto, SP',
+    '17': 'São José do Rio Preto, SP', '18': 'Presidente Prudente, SP', '19': 'Campinas, SP',
+    '21': 'Rio de Janeiro, RJ', '22': 'Campos dos Goytacazes, RJ', '24': 'Volta Redonda, RJ',
+    '27': 'Vitória, ES', '28': 'Cachoeiro de Itapemirim, ES',
+    '31': 'Belo Horizonte, MG', '32': 'Juiz de Fora, MG', '33': 'Governador Valadares, MG',
+    '34': 'Uberlândia, MG', '35': 'Poços de Caldas, MG', '37': 'Divinópolis, MG', '38': 'Montes Claros, MG',
+    '41': 'Curitiba, PR', '42': 'Ponta Grossa, PR', '43': 'Londrina, PR', '44': 'Maringá, PR',
+    '45': 'Cascavel, PR', '46': 'Pato Branco, PR',
+    '47': 'Joinville, SC', '48': 'Florianópolis, SC', '49': 'Chapecó, SC',
+    '51': 'Porto Alegre, RS', '53': 'Pelotas, RS', '54': 'Caxias do Sul, RS', '55': 'Santa Maria, RS',
+    '61': 'Brasília, DF', '62': 'Goiânia, GO', '63': 'Palmas, TO', '64': 'Rio Verde, GO',
+    '65': 'Cuiabá, MT', '66': 'Rondonópolis, MT', '67': 'Campo Grande, MS',
+    '68': 'Rio Branco, AC', '69': 'Porto Velho, RO',
+    '71': 'Salvador, BA', '73': 'Ilhéus, BA', '74': 'Juazeiro, BA', '75': 'Feira de Santana, BA', '77': 'Vitória da Conquista, BA',
+    '79': 'Aracaju, SE',
+    '81': 'Recife, PE', '82': 'Maceió, AL', '83': 'João Pessoa, PB', '84': 'Natal, RN',
+    '85': 'Fortaleza, CE', '86': 'Teresina, PI', '87': 'Petrolina, PE', '88': 'Juazeiro do Norte, CE', '89': 'Picos, PI',
+    '91': 'Belém, PA', '92': 'Manaus, AM', '93': 'Santarém, PA', '94': 'Marabá, PA',
+    '95': 'Boa Vista, RR', '96': 'Macapá, AP', '97': 'Coari, AM', '98': 'São Luís, MA', '99': 'Imperatriz, MA'
+  };
 
-function getVisibleSteps() {
-  return steps.filter(s => {
-    if (s.type === 'choice_condicional') return s.showIf(data);
-    return true;
-  });
-}
-
-function renderStep(idx) {
-  const visible = getVisibleSteps();
-  const step = visible[idx];
-  const pct = idx === 0 ? 0 : Math.round(((idx) / (visible.length - 1)) * 100);
-  document.getElementById('progress').style.width = pct + '%';
-  const container = document.getElementById('quiz-container');
-
-  if (step.type === 'intro') {
-    container.innerHTML = `
-      <div class="hero">
-        <div class="hero-badge">Avaliação gratuita</div>
-        <h2>Descubra como a Neuromodulação pode transformar sua qualidade de vida</h2>
-        <p>Responda algumas perguntas rápidas para que nossa equipe entenda exatamente o que você precisa e entre em contato com as melhores opções para você.</p>
-      </div>
-      <hr class="divider">
-      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:2rem;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--color-text-secondary);">
-          <i class="ti ti-clock" style="color:#534AB7;font-size:18px;" aria-hidden="true"></i> Leva menos de 2 minutos
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--color-text-secondary);">
-          <i class="ti ti-lock" style="color:#534AB7;font-size:18px;" aria-hidden="true"></i> Seus dados são confidenciais
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--color-text-secondary);">
-          <i class="ti ti-message-circle" style="color:#534AB7;font-size:18px;" aria-hidden="true"></i> Nossa equipe entra em contato pelo WhatsApp
-        </div>
-      </div>
-      <button class="btn-next" onclick="nextStep()" style="width:100%;">Começar agora</button>
-    `;
-    return;
+  function formatPhone(digits) {
+    digits = digits.slice(0, 11);
+    if (digits.length <= 2) return digits;
+    if (digits.length <= 7) return '(' + digits.slice(0, 2) + ') ' + digits.slice(2);
+    return '(' + digits.slice(0, 2) + ') ' + digits.slice(2, 7) + '-' + digits.slice(7);
   }
 
-  if (step.type === 'fields') {
-    container.innerHTML = `
-      <div class="step-label">Seus dados</div>
-      <p class="question">Antes de tudo, como podemos te chamar e entrar em contato?</p>
-      <div class="field-wrap">
-        <div>
-          <label>Nome completo</label>
-          <input type="text" id="f-nome" placeholder="Seu nome" value="${data.nome}" />
-        </div>
-        <div>
-          <label>Cidade</label>
-          <input type="text" id="f-cidade" placeholder="Sua cidade" value="${data.cidade}" />
-        </div>
-        <div>
-          <label>WhatsApp (com DDD)</label>
-          <input type="tel" id="f-tel" placeholder="(51) 99999-9999" value="${data.telefone}" />
-        </div>
-      </div>
-      <div class="nav">
-        <button class="btn-back" onclick="prevStep()"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
-        <button class="btn-next" onclick="saveFields()">Continuar</button>
-      </div>
-    `;
-    return;
+  function handlePhoneInput(e) {
+    var digits = e.target.value.replace(/\D/g, '').slice(0, 11);
+    e.target.value = formatPhone(digits);
+
+    var hint = document.getElementById('city-hint');
+    var cidadeInput = document.getElementById('f-cidade');
+    if (digits.length >= 2) {
+      var ddd = digits.slice(0, 2);
+      var cidade = DDD_CIDADE[ddd];
+      if (cidade) {
+        if (!cidadeInput.value || cidadeAutoPreenchida) {
+          cidadeInput.value = cidade;
+          cidadeAutoPreenchida = true;
+        }
+        hint.innerHTML = '<i class="ti ti-map-pin"></i> Cidade detectada pelo DDD ' + ddd;
+        hint.classList.add('show');
+      } else {
+        hint.classList.remove('show');
+      }
+    } else {
+      hint.classList.remove('show');
+      if (cidadeAutoPreenchida) {
+        cidadeInput.value = '';
+        cidadeAutoPreenchida = false;
+      }
+    }
   }
 
-  if (step.type === 'choice' || step.type === 'choice_condicional') {
-    const opts = step.options.map(o => `
-      <button class="option-btn ${data[step.key] === o.value ? 'selected' : ''}" onclick="selectOption('${step.key}','${o.value}',this)">
-        <span class="option-icon" aria-hidden="true">${o.icon}</span>
-        <span>${o.label}</span>
-      </button>
-    `).join('');
-    container.innerHTML = `
-      <div class="step-label">Passo ${idx} de ${visible.length - 2}</div>
-      <p class="question">${step.question}</p>
-      <div class="options">${opts}</div>
-      <div class="nav">
-        <button class="btn-back" onclick="prevStep()"><i class="ti ti-arrow-left" aria-hidden="true"></i></button>
-        <button class="btn-next" id="btn-next-choice" onclick="nextStep()" ${data[step.key] ? '' : 'disabled'}>Continuar</button>
-      </div>
-    `;
-    return;
+  function handleCidadeInput() {
+    cidadeAutoPreenchida = false;
   }
 
-  if (step.type === 'result') {
-    const servicoLabel = {
-      reabilitacao: 'Reabilitação',
-      saude_mental: 'Saúde Mental',
-      dor_cronica: 'Dor Crônica',
-      nao_sei: 'A definir com especialista'
-    }[data.objetivo] || data.objetivo;
+  var steps = [
+    { type: 'intro' },
+    { type: 'fields' },
+    {
+      type: 'choice', key: 'objetivo',
+      question: 'Qual é o principal objetivo com o tratamento?',
+      options: [
+        { label: 'Reabilitação — recuperar funções motoras, fala ou equilíbrio', icon: 'ti-walk', value: 'reabilitacao' },
+        { label: 'Saúde mental — depressão, ansiedade ou insônia', icon: 'ti-mood-smile', value: 'saude_mental' },
+        { label: 'Dor crônica — reduzir ou controlar a dor', icon: 'ti-bolt', value: 'dor_cronica' },
+        { label: 'Ainda não tenho certeza, quero entender as opções', icon: 'ti-help-circle', value: 'nao_sei' }
+      ]
+    },
+    {
+      type: 'choice_condicional', key: 'servico',
+      question: 'Qual área de reabilitação você busca?',
+      showIf: function (d) { return d.objetivo === 'reabilitacao'; },
+      options: [
+        { label: 'Motora — força, equilíbrio, capacidade de caminhar', icon: 'ti-accessible', value: 'motora' },
+        { label: 'Linguagem / fala — comunicação e processamento', icon: 'ti-message-2', value: 'linguagem' },
+        { label: 'Vestibular — tontura, vertigem, coordenação', icon: 'ti-orbit', value: 'vestibular' },
+        { label: 'Cognitiva — memória, atenção, planejamento', icon: 'ti-bulb', value: 'cognitiva' }
+      ]
+    },
+    {
+      type: 'choice', key: 'tempo',
+      question: 'Há quanto tempo você convive com essa condição?',
+      options: [
+        { label: 'Menos de 6 meses', icon: 'ti-calendar-event', value: 'menos_6m' },
+        { label: 'Entre 6 meses e 2 anos', icon: 'ti-calendar-due', value: '6m_2a' },
+        { label: 'Mais de 2 anos', icon: 'ti-calendar-time', value: 'mais_2a' },
+        { label: 'Não sei precisar', icon: 'ti-help-circle', value: 'nao_sei' }
+      ]
+    },
+    {
+      type: 'choice', key: 'frequencia',
+      question: 'Já realizou algum tratamento antes?',
+      options: [
+        { label: 'Sim, estou em tratamento atualmente', icon: 'ti-circle-check', value: 'em_tratamento' },
+        { label: 'Já fiz, mas interrompi', icon: 'ti-player-pause', value: 'interrompido' },
+        { label: 'Nunca fiz nenhum tratamento', icon: 'ti-seeding', value: 'nunca' }
+      ]
+    },
+    {
+      type: 'choice', key: 'limitacao',
+      question: 'O quanto isso impacta sua rotina hoje?',
+      options: [
+        { label: 'Bastante — dificulta atividades básicas do dia a dia', icon: 'ti-alert-circle', value: 'bastante' },
+        { label: 'Moderadamente — com esforço ainda consigo fazer quase tudo', icon: 'ti-alert-triangle', value: 'moderado' },
+        { label: 'Pouco — busco melhorar, mas ainda funciono bem', icon: 'ti-circle-check', value: 'pouco' }
+      ]
+    },
+    { type: 'result' }
+  ];
 
-    const subLabel = {
-      motora: 'Reabilitação Motora',
-      linguagem: 'Reabilitação da Linguagem',
-      vestibular: 'Reabilitação Vestibular',
-      cognitiva: 'Reabilitação Cognitiva'
-    }[data.servico] || '';
-
-    const tempoLabel = {
-      menos_6m: 'Menos de 6 meses',
-      '6m_2a': 'Entre 6 meses e 2 anos',
-      mais_2a: 'Mais de 2 anos',
-      nao_sei: 'Não sabe precisar'
-    }[data.tempo] || '';
-
-    const freqLabel = {
-      em_tratamento: 'Em tratamento atualmente',
-      interrompido: 'Já fez, interrompeu',
-      nunca: 'Nunca fez tratamento'
-    }[data.frequencia] || '';
-
-    const impactoLabel = {
-      bastante: 'Alto impacto na rotina',
-      moderado: 'Impacto moderado',
-      pouco: 'Baixo impacto'
-    }[data.limitacao] || '';
-
-    const msg = buildWAMessage(servicoLabel, subLabel, tempoLabel, freqLabel, impactoLabel);
-
-    container.innerHTML = `
-      <div style="text-align:center;margin-bottom:1.5rem;">
-        <div style="width:56px;height:56px;background:#EEEDFE;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;">
-          <i class="ti ti-check" style="color:#534AB7;font-size:28px;" aria-hidden="true"></i>
-        </div>
-        <h3 style="font-size:20px;font-weight:500;margin-bottom:6px;">Tudo certo, ${data.nome.split(' ')[0]}!</h3>
-        <p style="font-size:14px;color:var(--color-text-secondary);line-height:1.5;">Nossa equipe vai analisar seu perfil e entrar em contato com a melhor indicação para você.</p>
-      </div>
-      <div class="summary-box">
-        <div class="summary-row"><span>Nome</span><span>${data.nome}</span></div>
-        <div class="summary-row"><span>Cidade</span><span>${data.cidade}</span></div>
-        <div class="summary-row"><span>Área de interesse</span><span>${subLabel || servicoLabel}</span></div>
-        <div class="summary-row"><span>Tempo de condição</span><span>${tempoLabel}</span></div>
-        <div class="summary-row"><span>Tratamentos anteriores</span><span>${freqLabel}</span></div>
-        <div class="summary-row"><span>Impacto na rotina</span><span>${impactoLabel}</span></div>
-      </div>
-      <a class="whatsapp-btn" href="${msg}" target="_blank">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.557 4.126 1.532 5.856L.057 23.882l6.19-1.621A11.94 11.94 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.006-1.37l-.359-.213-3.723.976.993-3.625-.234-.373A9.818 9.818 0 012.182 12C2.182 6.575 6.575 2.182 12 2.182S21.818 6.575 21.818 12 17.425 21.818 12 21.818z"/></svg>
-        Enviar para o WhatsApp da Soma
-      </a>
-      <p style="text-align:center;font-size:12px;color:var(--color-text-tertiary);margin-top:12px;">Ao clicar, você será redirecionado para o WhatsApp com as informações preenchidas automaticamente.</p>
-    `;
-    return;
+  function getVisibleSteps() {
+    return steps.filter(function (s) {
+      if (s.type === 'choice_condicional') return s.showIf(data);
+      return true;
+    });
   }
-}
 
-function buildWAMessage(servicoLabel, subLabel, tempoLabel, freqLabel, impactoLabel) {
-  const phone = '5551999999999';
-  const area = subLabel || servicoLabel;
-  const text = `Olá! Preenchi o quiz da Soma Neuromodulação e gostaria de saber mais.
-
-*📋 Resumo do meu perfil:*
-• Nome: ${data.nome}
-• Cidade: ${data.cidade}
-• WhatsApp: ${data.telefone}
-• Área de interesse: ${area}
-• Há quanto tempo: ${tempoLabel}
-• Tratamentos anteriores: ${freqLabel}
-• Impacto na rotina: ${impactoLabel}
-
-Aguardo o contato da equipe!`;
-  return `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-}
-
-function selectOption(key, value, btn) {
-  data[key] = value;
-  document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  const nextBtn = document.getElementById('btn-next-choice');
-  if (nextBtn) nextBtn.disabled = false;
-}
-
-function saveFields() {
-  const nome = document.getElementById('f-nome').value.trim();
-  const cidade = document.getElementById('f-cidade').value.trim();
-  const tel = document.getElementById('f-tel').value.trim();
-  if (!nome || !cidade || !tel) {
-    alert('Por favor, preencha todos os campos para continuar.');
-    return;
+  function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
   }
-  data.nome = nome; data.cidade = cidade; data.telefone = tel;
-  current++;
-  renderStep(current);
-}
 
-function nextStep() {
-  current++;
-  renderStep(current);
-}
+  function renderStep(idx) {
+    var visible = getVisibleSteps();
+    var step = visible[idx];
+    var pct = idx === 0 ? 0 : Math.round((idx / (visible.length - 1)) * 100);
+    document.getElementById('progress').style.width = pct + '%';
+    var container = document.getElementById('quiz-container');
 
-function prevStep() {
-  if (current > 0) { current--; renderStep(current); }
-}
+    if (step.type === 'intro') {
+      container.innerHTML =
+        '<div class="hero">' +
+          '<div class="hero-badge">Avaliação gratuita</div>' +
+          '<h1>Descubra como a Neuromodulação pode te ajudar</h1>' +
+          '<p>Responda perguntas rápidas para nossa equipe entender o que você precisa e te chamar no WhatsApp com a melhor indicação.</p>' +
+        '</div>' +
+        '<hr class="divider">' +
+        '<div class="perks">' +
+          '<div class="perk-row"><i class="ti ti-clock"></i> Leva menos de 2 minutos</div>' +
+          '<div class="perk-row"><i class="ti ti-lock"></i> Seus dados são confidenciais</div>' +
+          '<div class="perk-row"><i class="ti ti-brand-whatsapp"></i> Contato direto pelo WhatsApp</div>' +
+        '</div>' +
+        '<button class="btn-next" id="btn-start" style="width:100%;">Começar agora</button>';
+      document.getElementById('btn-start').addEventListener('click', nextStep);
+      return;
+    }
 
-renderStep(0);
+    if (step.type === 'fields') {
+      container.innerHTML =
+        '<div class="step-label">Seus dados</div>' +
+        '<p class="question">Como podemos te chamar e entrar em contato?</p>' +
+        '<div class="field-wrap">' +
+          '<div>' +
+            '<label for="f-nome">Nome completo</label>' +
+            '<input type="text" id="f-nome" placeholder="Seu nome" value="' + escapeHtml(data.nome) + '" autocomplete="name">' +
+          '</div>' +
+          '<div>' +
+            '<label for="f-tel">WhatsApp</label>' +
+            '<div class="phone-input-wrap">' +
+              '<span class="phone-flag-prefix"><span class="flag-emoji">🇧🇷</span>+55</span>' +
+              '<input type="tel" inputmode="numeric" id="f-tel" placeholder="(11) 99999-9999" value="' + escapeHtml(data.telefone.replace(/^\+55\s?/, '')) + '" autocomplete="tel" maxlength="16">' +
+            '</div>' +
+            '<p class="city-hint" id="city-hint"></p>' +
+            '<p class="error-msg" id="field-error">Preencha todos os campos para continuar.</p>' +
+          '</div>' +
+          '<div>' +
+            '<label for="f-cidade">Cidade</label>' +
+            '<input type="text" id="f-cidade" placeholder="Sua cidade" value="' + escapeHtml(data.cidade) + '" autocomplete="address-level2">' +
+          '</div>' +
+        '</div>' +
+        '<div class="nav">' +
+          '<button class="btn-back" id="btn-back" aria-label="Voltar"><i class="ti ti-arrow-left"></i></button>' +
+          '<button class="btn-next" id="btn-continue">Continuar</button>' +
+        '</div>';
+      document.getElementById('btn-back').addEventListener('click', prevStep);
+      document.getElementById('btn-continue').addEventListener('click', saveFields);
+      document.getElementById('f-tel').addEventListener('input', handlePhoneInput);
+      document.getElementById('f-cidade').addEventListener('input', handleCidadeInput);
+      if (data.telefone) {
+        var digitsInit = data.telefone.replace(/\D/g, '');
+        if (digitsInit.length >= 2 && DDD_CIDADE[digitsInit.slice(0, 2)] === data.cidade) {
+          cidadeAutoPreenchida = true;
+          var hintInit = document.getElementById('city-hint');
+          hintInit.innerHTML = '<i class="ti ti-map-pin"></i> Cidade detectada pelo DDD ' + digitsInit.slice(0, 2);
+          hintInit.classList.add('show');
+        }
+      }
+      return;
+    }
+
+    if (step.type === 'choice' || step.type === 'choice_condicional') {
+      var optsHtml = step.options.map(function (o) {
+        var selected = data[step.key] === o.value ? ' selected' : '';
+        return '<button class="option-btn' + selected + '" data-key="' + step.key + '" data-value="' + o.value + '">' +
+          '<span class="option-icon"><i class="ti ' + o.icon + '"></i></span>' +
+          '<span class="option-label">' + o.label + '</span>' +
+          '<span class="option-radio"><i class="ti ti-check"></i></span>' +
+        '</button>';
+      }).join('');
+
+      container.innerHTML =
+        '<div class="step-label">Passo ' + idx + ' de ' + (visible.length - 2) + '</div>' +
+        '<p class="question">' + step.question + '</p>' +
+        '<div class="options">' + optsHtml + '</div>' +
+        '<div class="nav">' +
+          '<button class="btn-back" id="btn-back" aria-label="Voltar"><i class="ti ti-arrow-left"></i></button>' +
+          '<button class="btn-next" id="btn-next-choice"' + (data[step.key] ? '' : ' disabled') + '>Continuar</button>' +
+        '</div>';
+
+      document.getElementById('btn-back').addEventListener('click', prevStep);
+      document.getElementById('btn-next-choice').addEventListener('click', nextStep);
+
+      var optionButtons = container.querySelectorAll('.option-btn');
+      for (var i = 0; i < optionButtons.length; i++) {
+        optionButtons[i].addEventListener('click', function () {
+          selectOption(this.getAttribute('data-key'), this.getAttribute('data-value'), this);
+        });
+      }
+      return;
+    }
+
+    if (step.type === 'result') {
+      var servicoLabel = {
+        reabilitacao: 'Reabilitação',
+        saude_mental: 'Saúde Mental',
+        dor_cronica: 'Dor Crônica',
+        nao_sei: 'A definir com especialista'
+      }[data.objetivo] || data.objetivo;
+
+      var subLabel = {
+        motora: 'Reabilitação Motora',
+        linguagem: 'Reabilitação da Linguagem',
+        vestibular: 'Reabilitação Vestibular',
+        cognitiva: 'Reabilitação Cognitiva'
+      }[data.servico] || '';
+
+      var tempoLabel = {
+        menos_6m: 'Menos de 6 meses',
+        '6m_2a': 'Entre 6 meses e 2 anos',
+        mais_2a: 'Mais de 2 anos',
+        nao_sei: 'Não sabe precisar'
+      }[data.tempo] || '';
+
+      var freqLabel = {
+        em_tratamento: 'Em tratamento atualmente',
+        interrompido: 'Já fez, interrompeu',
+        nunca: 'Nunca fez tratamento'
+      }[data.frequencia] || '';
+
+      var impactoLabel = {
+        bastante: 'Alto impacto na rotina',
+        moderado: 'Impacto moderado',
+        pouco: 'Baixo impacto'
+      }[data.limitacao] || '';
+
+      var areaFinal = subLabel || servicoLabel;
+      var firstName = data.nome.split(' ')[0] || data.nome;
+      var waUrl = buildWAMessage(servicoLabel, subLabel, tempoLabel, freqLabel, impactoLabel);
+
+      container.innerHTML =
+        '<div class="result-icon-wrap">' +
+          '<div class="result-icon"><i class="ti ti-check"></i></div>' +
+          '<h2>Tudo certo, ' + escapeHtml(firstName) + '!</h2>' +
+          '<p>Nossa equipe vai analisar seu perfil e te chamar com a melhor indicação.</p>' +
+        '</div>' +
+        '<div class="summary-box">' +
+          '<div class="summary-row"><span>Nome</span><span>' + escapeHtml(data.nome) + '</span></div>' +
+          '<div class="summary-row"><span>Cidade</span><span>' + escapeHtml(data.cidade) + '</span></div>' +
+          '<div class="summary-row"><span>Interesse</span><span>' + escapeHtml(areaFinal) + '</span></div>' +
+          '<div class="summary-row"><span>Tempo</span><span>' + escapeHtml(tempoLabel) + '</span></div>' +
+          '<div class="summary-row"><span>Tratou antes</span><span>' + escapeHtml(freqLabel) + '</span></div>' +
+          '<div class="summary-row"><span>Impacto</span><span>' + escapeHtml(impactoLabel) + '</span></div>' +
+        '</div>' +
+        '<a class="whatsapp-btn" id="btn-whatsapp" href="' + waUrl + '" target="_blank" rel="noopener">' +
+          '<i class="ti ti-brand-whatsapp"></i> Enviar para o WhatsApp' +
+        '</a>' +
+        '<p class="footnote">Você será redirecionado ao WhatsApp com os dados já preenchidos.</p>';
+      return;
+    }
+  }
+
+  function buildWAMessage(servicoLabel, subLabel, tempoLabel, freqLabel, impactoLabel) {
+    var area = subLabel || servicoLabel;
+    var text = 'Olá! Preenchi o quiz da Soma Neuromodulação e gostaria de saber mais.\n\n' +
+      '*Resumo do meu perfil:*\n' +
+      '- Nome: ' + data.nome + '\n' +
+      '- Cidade: ' + data.cidade + '\n' +
+      '- WhatsApp: ' + data.telefone + '\n' +
+      '- Área de interesse: ' + area + '\n' +
+      '- Há quanto tempo: ' + tempoLabel + '\n' +
+      '- Tratamentos anteriores: ' + freqLabel + '\n' +
+      '- Impacto na rotina: ' + impactoLabel + '\n\n' +
+      'Aguardo o contato da equipe!';
+    return 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+  }
+
+  function selectOption(key, value, btn) {
+    data[key] = value;
+    var siblings = btn.parentElement.querySelectorAll('.option-btn');
+    for (var i = 0; i < siblings.length; i++) siblings[i].classList.remove('selected');
+    btn.classList.add('selected');
+    var nextBtn = document.getElementById('btn-next-choice');
+    if (nextBtn) nextBtn.disabled = false;
+  }
+
+  function saveFields() {
+    var nome = document.getElementById('f-nome').value.trim();
+    var cidade = document.getElementById('f-cidade').value.trim();
+    var telInput = document.getElementById('f-tel');
+    var tel = telInput.value.trim();
+    var telDigits = tel.replace(/\D/g, '');
+    var errorMsg = document.getElementById('field-error');
+    var nomeInput = document.getElementById('f-nome');
+    var cidadeInput = document.getElementById('f-cidade');
+
+    [nomeInput, cidadeInput, telInput].forEach(function (el) { el.classList.remove('field-error'); });
+
+    var telValido = telDigits.length === 10 || telDigits.length === 11;
+
+    if (!nome || !cidade || !tel || !telValido) {
+      if (!nome) nomeInput.classList.add('field-error');
+      if (!cidade) cidadeInput.classList.add('field-error');
+      if (!tel || !telValido) telInput.classList.add('field-error');
+      errorMsg.textContent = (!telValido && tel) ? 'Informe um WhatsApp válido com DDD.' : 'Preencha todos os campos para continuar.';
+      errorMsg.classList.add('show');
+      return;
+    }
+    errorMsg.classList.remove('show');
+    data.nome = nome; data.cidade = cidade; data.telefone = '+55 ' + tel;
+    current++;
+    renderStep(current);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function nextStep() {
+    current++;
+    renderStep(current);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function prevStep() {
+    if (current > 0) {
+      current--;
+      renderStep(current);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  renderStep(0);
+})();
 </script>
+
+</body>
+</html>
